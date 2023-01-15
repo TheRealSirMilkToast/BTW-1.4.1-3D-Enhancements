@@ -211,7 +211,7 @@ public boolean renderAsNormalBlock()
 public void registerIcons( IconRegister register )
 {
 	blockIcon = register.registerIcon( "ladder" );
-	sandstone_top = register.registerIcon("wood");
+	sandstone_top = register.registerIcon("planks_oak");
 }
 
 @Override
