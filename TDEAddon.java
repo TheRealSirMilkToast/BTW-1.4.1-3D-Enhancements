@@ -18,8 +18,7 @@ public class TDEAddon extends FCAddOn {
 	{
 		FCAddOnHandler.LogMessage(this.getName() + " Version " + this.getVersionString() + " Initializing...");
 
-		TileEntity.addMapping(TileEntityWorkbench.class, "FCBlockWorkbench");
-		TileEntityRenderer.instance.addSpecialRendererForClass (TileEntityWorkbench.class, new TileEntityWorkbenchRenderer() );
+		SetupTileEntities();
 
 		FCRecipes.AddRecipe(new ItemStack(FCBetterThanWolves.fcBlockWorkbench, 1), new Object[]
 		{
@@ -32,6 +31,18 @@ public class TDEAddon extends FCAddOn {
 	@Override
 	public String GetLanguageFilePrefix() {
 		return LANGUAGE_PREFIX;
+	}
+
+	public void SetupTileEntities()
+	{
+		TileEntity.addMapping(TileEntityWorkbench.class, "FCBlockWorkbench");
+		TileEntityRenderer.instance.addSpecialRendererForClass (TileEntityWorkbench.class, new TDETileEntityRenderer() );
+
+		TileEntity.addMapping(TileEntityReeds.class, "FCBlockReeds");
+		TileEntityRenderer.instance.addSpecialRendererForClass (TileEntityReeds.class, new TDETileEntityRenderer() );
+
+		TileEntity.addMapping(TileEntityReedRoots.class, "FCBlockReedRoots");
+		TileEntityRenderer.instance.addSpecialRendererForClass (TileEntityReedRoots.class, new TDETileEntityRenderer() );
 	}
 
 }
