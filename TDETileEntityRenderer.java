@@ -7,6 +7,8 @@ public class TDETileEntityRenderer extends TileEntitySpecialRenderer
 {
     private ModelWorkbench modelWorkbench = new ModelWorkbench();
     private ModelReeds modelReeds = new ModelReeds();
+    private ModelReedRoots modelReedRoots = new ModelReedRoots();
+    
 
     public void renderTileEntityAt(TileEntity TE, double par2, double par4, double par6, float par8)
     {
@@ -24,8 +26,8 @@ public class TDETileEntityRenderer extends TileEntitySpecialRenderer
         }
         else if(TE instanceof TileEntityReedRoots)
         {
-            this.bindTextureByName("/ModelReeds.png");
-            model = this.modelReeds;
+            this.bindTextureByName("/ModelReedRoots.png");
+            model = this.modelReedRoots;
         }
 
         GL11.glPushMatrix();
