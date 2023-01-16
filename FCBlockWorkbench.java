@@ -240,7 +240,7 @@ public class FCBlockWorkbench extends BlockWorkbench
      * When this method is called, your block should register all the icons it needs with the given IconRegister. This
      * is the only chance you get to register icons.
      */
-    public void registerIcons(IconRegister par1IconRegister) {}
+    //public void registerIcons(IconRegister par1IconRegister) {}
 
     /**
      * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
