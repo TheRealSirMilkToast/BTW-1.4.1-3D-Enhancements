@@ -37,10 +37,10 @@ public class ModelWorkbench extends ModelBase {
 		this.bb_main.setTextureOffset(83, 101).addBox(-3.0F, -36.0F, 4.5F, 2, 2, 3, 0.0F);
 		this.bb_main.setTextureOffset(86, 107).addBox(-2.5F, -34.0F, 5.5F, 1, 5, 1, 0.0F);
 		this.bb_main.setTextureOffset(97, 81).addBox(-15.0F, -35.0F, 5.0F, 2, 2, 2, 0.0F);
-		this.bb_main.setTextureOffset(100, 86).addBox(-14.5F, -35.5F, 5.5F, 1, 6, 1, 0.0F);
+		this.bb_main.setTextureOffset(100, 86).addBox(-14.5F, -35.5F, 5.5F, 1, 7, 1, 0.0F);
 		this.bb_main.setTextureOffset(82, 81).addBox(-15.0F, -36.0F, 8.5F, 2, 2, 3, 0.0F);
 		this.bb_main.setTextureOffset(82, 74).addBox(-14.5F, -35.5F, 8.0F, 1, 1, 4, 0.0F);
-		this.bb_main.setTextureOffset(85, 88).addBox(-14.5F, -34.5F, 9.5F, 1, 5, 1, 0.0F);
+		this.bb_main.setTextureOffset(85, 88).addBox(-14.5F, -34.0F, 9.5F, 1, 5, 1, 0.0F);
 		this.bb_main.setTextureOffset(99, 98).addBox(-3.0F, -35.0F, 9.0F, 2, 2, 2, 0.0F);
 		this.bb_main.setTextureOffset(101, 103).addBox(-2.5F, -35.5F, 9.5F, 1, 7, 1, 0.0F);
 		this.bb_main.setTextureOffset(0, 16).addBox(-16.0F, -40.0F, 1.0F, 1, 1, 14, 0.0F);
