@@ -43,6 +43,8 @@ public class TDEAddon extends FCAddOn {
 
 		TileEntity.addMapping(TileEntityReedRoots.class, "FCBlockReedRoots");
 		TileEntityRenderer.instance.addSpecialRendererForClass (TileEntityReedRoots.class, new TDETileEntityRenderer() );
+
+		TileEntityRenderer.instance.addSpecialRendererForClass (FCTileEntityInfernalEnchanter.class, new TDETileEntityRenderer() );
 	}
 
 }
