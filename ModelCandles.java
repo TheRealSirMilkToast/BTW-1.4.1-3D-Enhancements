@@ -9,12 +9,12 @@ public class ModelCandles extends ModelBase {
 	private final ModelRenderer bb_main;
 
 	public ModelCandles() {
-		textureWidth = 32;
-		textureHeight = 32;
+		textureWidth = 16;
+		textureHeight = 16;
 
 		bb_main = new ModelRenderer(this);
 		bb_main.setRotationPoint(0.0F, 24.0F, 0.0F);
-		this.bb_main.setTextureOffset(0, 0).addBox(-1.0F, -36.0F, -13.0F, 1, 4, 1, 0.0F);
+		this.bb_main.setTextureOffset(0, 0).addBox(-1.0F, -36.0F, -13.5F, 2, 6, 2, 0.0F);
 	}
 
 	/**

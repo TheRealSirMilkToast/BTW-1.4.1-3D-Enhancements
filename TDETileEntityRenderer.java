@@ -109,46 +109,79 @@ public class TDETileEntityRenderer extends TileEntitySpecialRenderer
         //Candle Code:
         for(int numCandles = 0; numCandles < 5; numCandles++)
         {
+        	double xpos = par1TileEntityEnchantmentTable.xCoord;
+            double ypos = par1TileEntityEnchantmentTable.yCoord;
+            double zpos = par1TileEntityEnchantmentTable.zCoord;
+            
             GL11.glPushMatrix();
             GL11.glTranslatef((float)par2 + 0.5F, (float)par4 + 0.75F, (float)par6 + 0.5F);
 
             //rotate based on which candle
             GL11.glRotatef((360.0F/5.0F)*numCandles, 0.0F, 1.0F, 0.0F);
 
-            //Rise or Fall based on whether or not someone is near
             GL11.glTranslatef(0.0F, par1TileEntityEnchantmentTable.CandleRandomCurrentHeight[numCandles], 0.0F);
 
+            
+            //Default yPos for second flame particle to spawn at
+            double secondFlameYPos = ypos + par1TileEntityEnchantmentTable.CandleRandomMaxHeightMulti[numCandles] + 0.4 - 0.1875;
+            
+            //Rise or Fall based on whether or not someone is near
             if(par1TileEntityEnchantmentTable.CandleRandomCurrentHeight[numCandles] >= 1.0F * par1TileEntityEnchantmentTable.CandleRandomMaxHeightMulti[numCandles])
             {
-                //Bounce up and down
-                var9 = (float)par1TileEntityEnchantmentTable.tickCount + par8;
-                GL11.glTranslatef(0.0F, MathHelper.sin(var9*0.075F) * 0.1F, 0.0F);
+
+                if(!par1TileEntityEnchantmentTable.isLit[numCandles])
+                {
+                	par1TileEntityEnchantmentTable.isLit[numCandles] = true;
+                	par1TileEntityEnchantmentTable.allLit =
+                			   par1TileEntityEnchantmentTable.isLit[0]
+        					&& par1TileEntityEnchantmentTable.isLit[1]
+							&& par1TileEntityEnchantmentTable.isLit[2]
+							&& par1TileEntityEnchantmentTable.isLit[3]
+							&& par1TileEntityEnchantmentTable.isLit[4];
+
+                    par1TileEntityEnchantmentTable.waitBeforeGoDown[numCandles] = 0;
+                	
+	                //Flame particles that display when the candles light
+	                par1TileEntityEnchantmentTable.DisplayCandleFlameAtLoc
+	                (
+	                	false,
+	                	numCandles,
+	                	(double)xpos + 0.5,
+	                    (double)ypos + par1TileEntityEnchantmentTable.CandleRandomMaxHeightMulti[numCandles] + 0.4 - 0.5,
+	                    (double)zpos + 0.5,
+	                    0.0D,
+	                    0.0D,
+	                    (2.0F*(float)Math.PI/5.0F)*numCandles
+	                );
+            	}
+                
+                if(par1TileEntityEnchantmentTable.isLit[numCandles])
+                {
+	                //Bounce up and down
+	                var9 = (float)par1TileEntityEnchantmentTable.CandleTickCounts[numCandles] + par8;
+	                double bounceAmmount = (MathHelper.sin(var9*0.075F + par1TileEntityEnchantmentTable.CandleRandomHoverOffset[numCandles]) * 0.05F) * par1TileEntityEnchantmentTable.CandleRandomHoverSpeedMulti[numCandles];
+	                GL11.glTranslatef(0.0F, (float) bounceAmmount, 0.0F);
+	                secondFlameYPos = secondFlameYPos + bounceAmmount;
+                }
             }
-            else
+            
+            if(par1TileEntityEnchantmentTable.isLit[numCandles])
             {
-                double xpos = par1TileEntityEnchantmentTable.xCoord;
-                double ypos = par1TileEntityEnchantmentTable.yCoord;
-                double zpos = par1TileEntityEnchantmentTable.zCoord;
-
-                //Flame particles
-                par1TileEntityEnchantmentTable.DisplayCandleFlameAtLoc
-                (
-                    //Might need to subtract PI/5 radians instead of add for these
-                    //Need to make sure the fire particles line up with their respective candles
-                    (double)xpos + 0.5 + MathHelper.sin(((2.0F*(float)Math.PI)/5.0F)*numCandles + (((float)Math.PI)/5.0F))*0.8125F,
-                    (double)ypos + 0.75 + par1TileEntityEnchantmentTable.CandleRandomCurrentHeight[numCandles],
-                    (double)zpos + 0.5 + MathHelper.cos(((2.0F*(float)Math.PI)/5.0F)*numCandles + (((float)Math.PI)/5.0F))*0.8125F,
-                    0.1D,
-                    0.0D,
-                    0.1D
-                );
+	            //Spawn second dose of flame particles if possible
+	    		par1TileEntityEnchantmentTable.DisplayCandleFlameAtLoc
+	            (
+	            	false,
+	            	numCandles,
+	            	(double)xpos + 0.5,
+	            	secondFlameYPos,
+	                (double)zpos + 0.5,
+	                0.0D,
+	                1.0D,
+	                (2.0F*(float)Math.PI/5.0F)*numCandles
+	            );
             }
 
-            //Spin
-            var11 = par1TileEntityEnchantmentTable.candleRotationPrev + 0.1F;
-            GL11.glRotatef(-var11 * 180.0F / (float)Math.PI, 0.0F, 1.0F, 0.0F);
-
-            //this.bindTextureByName("/ModelWorkbenchTexture.png");
+            this.bindTextureByName("/ModelInfernalEnchanterCandles.png");
             GL11.glEnable(GL11.GL_CULL_FACE);
             this.modelCandles.render((Entity)null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
             GL11.glPopMatrix();

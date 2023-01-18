@@ -28,41 +28,43 @@ public class FCTileEntityInfernalEnchanter extends TileEntity
     public float bookRotation;
 
     //Floating Candle vars
-    public float candleRotation2;
-    public float candleRotationPrev;
-    public float candleRotation;
-    public boolean shouldBounce;
+    public int[] CandleTickCounts = {0, 0, 0, 0, 0};
     public float height = 0.0F;
     public float[] CandleRandomMaxHeightMulti = {1.0F, 1.0F, 1.0F, 1.0F, 1.0F};
     public float[] CandleRandomSpeedMulti = {1.0F, 1.0F, 1.0F, 1.0F, 1.0F};
     public float[] CandleRandomCurrentHeight = {0.0F, 0.0F, 0.0F, 0.0F, 0.0F};
-    public float[] CandleRandomHoverFreq = {};
-
+    public float[] CandleRandomHoverOffset = {0.0F, 0.0F, 0.0F, 0.0F, 0.0F};
+    public float[] CandleRandomHoverSpeedMulti = {0.0F, 0.0F, 0.0F, 0.0F, 0.0F};
+    public int m_iTimeSinceLastCandleFlame[];
+    public boolean[] isLit = {false, false, false, false, false};
+    public boolean allLit = false;
+    public int[] waitBeforeGoDown = {0, 0, 0, 0, 0};
 
     private static Random rand = new Random();
-    //private String field_94136_s;
 	
-	private int m_iTimeSinceLastCandleFlame[];
 	public boolean m_bPlayerNear;
 	
+	//This needs to match the max age of the flame particles
 	private static final int m_iMaxTimeBetweenFlameUpdates = 10;
 	
 	public FCTileEntityInfernalEnchanter()
 	{
 		super();
 		
-		m_iTimeSinceLastCandleFlame = new int[4];
+		m_iTimeSinceLastCandleFlame = new int[5];
 		
-		for ( int iTemp = 0; iTemp < 4; iTemp++ )
+		for ( int iTemp = 0; iTemp < 5; iTemp++ )
 		{
-			m_iTimeSinceLastCandleFlame[iTemp] = 0;
+			m_iTimeSinceLastCandleFlame[iTemp] = -1;
 		}
 
         //Generate random max heights
         for(int i = 0; i < 5; i++)
         {
-            CandleRandomMaxHeightMulti[i] = (float) (rand.nextFloat()/2 + .5);
-            CandleRandomSpeedMulti[i] = (float) (rand.nextFloat()/2 + .5);
+            CandleRandomMaxHeightMulti[i] = (float) (rand.nextFloat()/4 + 1);
+            CandleRandomSpeedMulti[i] = (float) (rand.nextFloat()/3 + .5);
+            CandleRandomHoverOffset[i] = (float) ((float) rand.nextFloat()*2*Math.PI);
+            CandleRandomHoverSpeedMulti[i] = (float) (rand.nextFloat()/3 + .5);
         }
 		
 		m_bPlayerNear = false;
@@ -75,6 +77,7 @@ public class FCTileEntityInfernalEnchanter extends TileEntity
         
         drawBook();
         drawCandles();
+        UpdateCandleFlames();
     
         // note that this is done on the client as well, since it's entirely display related
         
@@ -83,14 +86,8 @@ public class FCTileEntityInfernalEnchanter extends TileEntity
         if (entityplayer != null)
         {
         	if ( !m_bPlayerNear )
-        	{
-        		//LightCandles();
-        		
+        	{        		
         		m_bPlayerNear = true;
-        	}
-        	else
-        	{
-        		//UpdateCandleFlames();
         	}
         }
         else
@@ -197,27 +194,32 @@ public class FCTileEntityInfernalEnchanter extends TileEntity
 
     public void drawCandles()
     {
-        this.candleRotationPrev = this.candleRotation2;
         EntityPlayer var1 = this.worldObj.getClosestPlayer((double)((float)this.xCoord + 0.5F), (double)((float)this.yCoord + 0.5F), (double)((float)this.zCoord + 0.5F), 3.0D);
 
         if (var1 != null)//if someone is near
         {
-            this.candleRotation += 0.02F;
-            this.shouldBounce = true;
             //Parabola function for height
             for(int i = 0; i < 5; i++)
             {
-                //this.height = (float) (this.height + (-0.3F*(Math.pow((this.height - 0.5F), 2.0F)) + 0.1F));
-                CandleRandomCurrentHeight[i] = (float) (CandleRandomCurrentHeight[i] + (-0.3F*(Math.pow((CandleRandomCurrentHeight[i] - 0.5F), 2.0F)) + 0.1F) * CandleRandomSpeedMulti[i]);
+                CandleRandomCurrentHeight[i] = (float) (CandleRandomCurrentHeight[i] + (-0.3F*(Math.pow((CandleRandomCurrentHeight[i] - 0.6F), 2.0F)) + 0.13F) * CandleRandomSpeedMulti[i]);
             }
         }
         else//if not
         {
-            this.shouldBounce = false;
             for(int i = 0; i < 5; i++)
             {
-                //this.height = (float) (this.height - (-0.3F*(Math.pow((this.height - 0.5F), 2.0F)) + 0.1F));
-                CandleRandomCurrentHeight[i] = (float) (CandleRandomCurrentHeight[i] - (-0.3F*(Math.pow((CandleRandomCurrentHeight[i] - 0.5F), 2.0F)) + 0.1F) * CandleRandomSpeedMulti[i]);
+                if(isLit[i] && waitBeforeGoDown[i] < 15)
+                {
+                    waitBeforeGoDown[i]++;
+                }
+                else
+                {
+                    CandleRandomCurrentHeight[i] = (float) (CandleRandomCurrentHeight[i] - (-0.3F*(Math.pow((CandleRandomCurrentHeight[i] - 0.6F), 2.0F)) + 0.13F) * CandleRandomSpeedMulti[i] * 0.5F - 0.01F);
+                    
+                    isLit[i] = false;
+                    allLit = false;
+                    CandleTickCounts[i] = 0;
+                }
             }
         }
 
@@ -231,142 +233,69 @@ public class FCTileEntityInfernalEnchanter extends TileEntity
 
             while (CandleRandomCurrentHeight[i] < 0.0F)
             {
-                CandleRandomMaxHeightMulti[i] = (float) (rand.nextFloat()/2 + .5);
-                CandleRandomSpeedMulti[i] = (float) (rand.nextFloat()/2 + .5);
+            	CandleRandomMaxHeightMulti[i] = (float) (rand.nextFloat()/4 + 1);
+                CandleRandomSpeedMulti[i] = (float) (rand.nextFloat()/3 + .5);
+                CandleRandomHoverOffset[i] = (float) ((float) rand.nextFloat()*2*Math.PI);
+                CandleRandomHoverSpeedMulti[i] = (float) (rand.nextFloat()/3 + .5);
 
                 CandleRandomCurrentHeight[i] = 0.0F;
             }
+            
+            if(isLit[i])
+        	{
+                worldObj.playSoundEffect( this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, "mob.ghast.fireball", 1.0F, worldObj.rand.nextFloat() * 0.4F + 0.8F );
+        		++CandleTickCounts[i];
+        	}
         }
-        
-
-        while (this.candleRotation2 >= (float)Math.PI)
-        {
-            this.candleRotation2 -= ((float)Math.PI * 2F);
-        }
-
-        while (this.candleRotation2 < -(float)Math.PI)
-        {
-            this.candleRotation2 += ((float)Math.PI * 2F);
-        }
-
-        while (this.candleRotation >= (float)Math.PI)
-        {
-            this.candleRotation -= ((float)Math.PI * 2F);
-        }
-
-        while (this.candleRotation < -(float)Math.PI)
-        {
-            this.candleRotation += ((float)Math.PI * 2F);
-        }
-
-        float var7;
-
-        for (var7 = this.candleRotation - this.candleRotation2; var7 >= (float)Math.PI; var7 -= ((float)Math.PI * 2F))
-        {
-            ;
-        }
-
-        while (var7 < -(float)Math.PI)
-        {
-            var7 += ((float)Math.PI * 2F);
-        }
-
-        this.candleRotation2 += var7 * 0.4F;
     }
     
     
     
     //************* Class Specific Methods ************//
     
-    private void LightCandles()
-    {
-    	for ( int iTemp = 0; iTemp < 4; iTemp++ )
-    	{
-    		DisplayCandleFlameAtIndex( iTemp );
-    	}
-    	
-        worldObj.playSoundEffect( xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D, "mob.ghast.fireball", 1.0F, worldObj.rand.nextFloat() * 0.4F + 0.8F );
-    }
-    
+    //schedules candle flames to be redrawn
     private void UpdateCandleFlames()
     {
-    	for ( int iTemp = 0; iTemp < 4; iTemp++ )
+    	for ( int iTemp = 0; iTemp < 5; iTemp++ )
     	{
-    		m_iTimeSinceLastCandleFlame[iTemp]++;
-    		
-    		if ( m_iTimeSinceLastCandleFlame[iTemp] > m_iMaxTimeBetweenFlameUpdates || worldObj.rand.nextInt( 5 ) == 0 )
-    		{   		    		
-    			DisplayCandleFlameAtIndex( iTemp );
+    		if(m_iTimeSinceLastCandleFlame[iTemp] > -1)
+    		{
+	    		m_iTimeSinceLastCandleFlame[iTemp]++;
+	    		
+	    		if ( m_iTimeSinceLastCandleFlame[iTemp] > m_iMaxTimeBetweenFlameUpdates)
+	    		{   		    		
+	    			m_iTimeSinceLastCandleFlame[iTemp] = -1;
+	    		}
     		}
     	}
     }
-    
-    private void DisplayCandleFlameAtIndex( int iCandleIndex )
-    {
-        double flameX = xCoord + ( 2.0D / 16.0D );
-        double flameY = yCoord + FCBlockInfernalEnchanter.m_fBlockHeight + FCBlockInfernalEnchanter.m_fCandleHeight + 0.175F;
-        double flameZ = zCoord  + ( 2.0D / 16.0D );
-        
-        if ( iCandleIndex == 1 || iCandleIndex == 3 )
-        {
-        	flameX = xCoord + ( 14.0D / 16.0D );
-        }
-        
-        if ( iCandleIndex == 2 || iCandleIndex == 3 )
-        {
-        	flameZ = zCoord + ( 14.0D / 16.0D );
-        }
-        
-        //DisplayCandleFlameAtLoc( flameX, flameY, flameZ );
-        
-		m_iTimeSinceLastCandleFlame[iCandleIndex] = 0; 		
-    }
 
-	public void DisplayCandleFlameAtLoc( double xCoord, double yCoord, double zCoord, double velX, double velY, double velZ )
+    //overrode some vars
+    //velZ == initial rotation
+    //velY == type
+	public void DisplayCandleFlameAtLoc(boolean IgnoreTimer, int candleIndex, double xCoord, double yCoord, double zCoord, double velX, double velY, double velZ )
 	{
-        worldObj.spawnParticle( "smoke", xCoord, yCoord, zCoord, velX, velY, velZ);
-        worldObj.spawnParticle( "flame", xCoord, yCoord, zCoord, velX, velY, velZ);
+		//if the type of flame is the second one
+		if(velY == 1.0)
+		{
+			double randValue = 0.03125;
+			xCoord = xCoord + (MathHelper.sin((float)Math.PI + (float)velZ)/9.0F)*7F + rand.nextFloat()*randValue*2 - randValue;
+			zCoord = zCoord + (MathHelper.cos((float)Math.PI + (float)velZ)/9.0F)*7F + rand.nextFloat()*randValue*2 - randValue;
+            yCoord = yCoord + 0.25 + rand.nextFloat()*randValue*2 - randValue;
+		}
+		
+		if (m_iTimeSinceLastCandleFlame[candleIndex] == -1)
+		{
+			m_iTimeSinceLastCandleFlame[candleIndex] = 0;
+			
+			worldObj.spawnParticle( "smoke", xCoord, yCoord, zCoord, 0F, 0F, 0F);
+			worldObj.spawnParticle( "TDEInfernalEnchanterFlame", xCoord, yCoord, zCoord, velX, velY, velZ);
+			worldObj.spawnParticle( "TDEInfernalEnchanterFlame", xCoord, yCoord, zCoord, velX, velY, velZ);
+			worldObj.spawnParticle( "TDEInfernalEnchanterFlame", xCoord, yCoord, zCoord, velX, velY, velZ);
+		}
+		else if(IgnoreTimer)
+		{
+			worldObj.spawnParticle( "TDEInfernalEnchanterFlame", xCoord, yCoord, zCoord, velX, velY, velZ);
+		}
 	}
-	
-	
-	/**
-     * Writes a tile entity to NBT.
-     */
-    /*public void writeToNBT(NBTTagCompound par1NBTTagCompound)
-    {
-        super.writeToNBT(par1NBTTagCompound);
-
-        if (this.func_94135_b())
-        {
-            par1NBTTagCompound.setString("CustomName", this.field_94136_s);
-        }
-    }*/
-
-    /**
-     * Reads a tile entity from NBT.
-     */
-    /*public void readFromNBT(NBTTagCompound par1NBTTagCompound)
-    {
-        super.readFromNBT(par1NBTTagCompound);
-
-        if (par1NBTTagCompound.hasKey("CustomName"))
-        {
-            this.field_94136_s = par1NBTTagCompound.getString("CustomName");
-        }
-    }*/
-
-    /*public String func_94133_a()
-    {
-        return this.func_94135_b() ? this.field_94136_s : "container.enchant";
-    }
-
-    public boolean func_94135_b()
-    {
-        return this.field_94136_s != null && this.field_94136_s.length() > 0;
-    }
-
-    public void func_94134_a(String par1Str)
-    {
-        this.field_94136_s = par1Str;
-    }*/
 }
