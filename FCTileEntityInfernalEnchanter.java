@@ -243,7 +243,6 @@ public class FCTileEntityInfernalEnchanter extends TileEntity
             
             if(isLit[i])
         	{
-                worldObj.playSoundEffect( this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, "mob.ghast.fireball", 1.0F, worldObj.rand.nextFloat() * 0.4F + 0.8F );
         		++CandleTickCounts[i];
         	}
         }
@@ -282,6 +281,10 @@ public class FCTileEntityInfernalEnchanter extends TileEntity
 			xCoord = xCoord + (MathHelper.sin((float)Math.PI + (float)velZ)/9.0F)*7F + rand.nextFloat()*randValue*2 - randValue;
 			zCoord = zCoord + (MathHelper.cos((float)Math.PI + (float)velZ)/9.0F)*7F + rand.nextFloat()*randValue*2 - randValue;
             yCoord = yCoord + 0.25 + rand.nextFloat()*randValue*2 - randValue;
+		}
+		else
+		{
+			this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "mob.ghast.fireball", 1.0F, 0.8F + this.rand.nextFloat() * 0.4F, false);
 		}
 		
 		if (m_iTimeSinceLastCandleFlame[candleIndex] == -1)
