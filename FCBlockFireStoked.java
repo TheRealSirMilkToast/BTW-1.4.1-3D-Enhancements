@@ -143,26 +143,14 @@ public class FCBlockFireStoked extends FCBlockFire
 	//----------- Client Side Functionality -----------//
     
     private Icon[] fireTextureArrayBottom;
-    private Icon[] fireTextureArrayTop;
     
     @Override
     public void registerIcons( IconRegister register )
     {
     	fireTextureArrayBottom = new Icon[] { 
-        	register.registerIcon("fireStokedBottom_0", new FCClientTextureFireStoked("fireStokedBottom_0", 0)),
-        	register.registerIcon("fireStokedBottom_1", new FCClientTextureFireStoked("fireStokedBottom_1", 1)),
+        	register.registerIcon("fireStokedBottom_0"/*, new FCClientTextureFireStoked("fireStokedBottom_0", 0)*/),
+        	register.registerIcon("fireStokedBottom_1"/*, new FCClientTextureFireStoked("fireStokedBottom_1", 1)*/),
     	};
-    	
-    	fireTextureArrayTop = new Icon[] { 
-            	register.registerIcon("fireStokedTop_0", new FCClientTextureFireStoked("fireStokedTop_0", 0)),
-            	register.registerIcon("fireStokedTop_1", new FCClientTextureFireStoked("fireStokedTop_1", 1)),
-        	};
-    }
-
-    
-    public Icon getFireTop(int i)
-    {
-    	return fireTextureArrayTop[i];
     }
     
     @Override
@@ -180,127 +168,98 @@ public class FCBlockFireStoked extends FCBlockFire
     @Override
     public boolean RenderBlock( RenderBlocks renderBlocks, int i, int j, int k )
     {
-    	for(int index = 0; index < 2; index++)
-        {
-	    	// portion of RenderBlocks.RenderBlockFire() heavily modified
-	
-	    	IBlockAccess blockAccess = renderBlocks.blockAccess;
-	    	
-	    	if(index == 1)
-    		{
-	    		if(blockAccess.getBlockId(i, j+1, k) == 0)
-	    		{
-	    			return true;
-	    		}
-	    		if(!blockAccess.isAirBlock(i, j+1, k))
-	    		{
-	    			return true;
-	    		}
-    		}
-	    	
-	        Tessellator tessellator = Tessellator.instance;
-	        Icon texture1 = func_94438_c( 0 );
-	        Icon texture2 = func_94438_c( 1 );
-	        
-	        if(index == 0)
-	        {
-		        if ( ( ( i + k ) & 1 ) != 0 )
-		        {
-			        texture1 = func_94438_c( 1 );
-			        texture2 = func_94438_c( 0 );
-		        }
-	        }
-	        else
-	        {
-	        	texture1 = getFireTop( 0 );
-		        texture2 = getFireTop( 1 );
-		        
-	        	if ( ( ( i + k ) & 1 ) != 0 )
-		        {
-			        texture1 = getFireTop( 1 );
-			        texture2 = getFireTop( 0 );
-		        }
-	        }
-	        
-	        Icon currentTexture = texture1;
-	
-	        tessellator.setColorOpaque_F(1.0F, 1.0F, 1.0F);
-	        
-	        tessellator.setBrightness( getMixedBrightnessForBlock(blockAccess, i, j, k ) );
-	        
-	        double dMinU = (double)currentTexture.getMinU();
-	        double dMinV = (double)currentTexture.getMinV();
-	        double dMaxU = (double)currentTexture.getMaxU();
-	        double dMaxV = (double)currentTexture.getMaxV();
-	        
-	        float fRenderHeight = 1.0F;
+    	// portion of RenderBlocks.RenderBlockFire() heavily modified
+
+    	IBlockAccess blockAccess = renderBlocks.blockAccess;
+    	
+        Tessellator tessellator = Tessellator.instance;
+        Icon texture1 = func_94438_c( 0 );
+        Icon texture2 = func_94438_c( 1 );
         
-	        double var18 = (double)i + 0.5D + 0.2D;
-	        double var20 = (double)i + 0.5D - 0.2D;
-	        double var22 = (double)k + 0.5D + 0.2D;
-	        double var24 = (double)k + 0.5D - 0.2D;
-	        double var26 = (double)i + 0.5D - 0.3D;
-	        double var28 = (double)i + 0.5D + 0.3D;
-	        double var30 = (double)k + 0.5D - 0.3D;
-	        double var32 = (double)k + 0.5D + 0.3D;
-	        
-	        tessellator.addVertexWithUV(var26, (double)((float)j + fRenderHeight), (double)(k + 1), dMaxU, dMinV);
-	        tessellator.addVertexWithUV(var18, (double)(j + 0), (double)(k + 1), dMaxU, dMaxV);
-	        tessellator.addVertexWithUV(var18, (double)(j + 0), (double)(k + 0), dMinU, dMaxV);
-	        tessellator.addVertexWithUV(var26, (double)((float)j + fRenderHeight), (double)(k + 0), dMinU, dMinV);
-	        tessellator.addVertexWithUV(var28, (double)((float)j + fRenderHeight), (double)(k + 0), dMaxU, dMinV);
-	        tessellator.addVertexWithUV(var20, (double)(j + 0), (double)(k + 0), dMaxU, dMaxV);
-	        tessellator.addVertexWithUV(var20, (double)(j + 0), (double)(k + 1), dMinU, dMaxV);
-	        tessellator.addVertexWithUV(var28, (double)((float)j + fRenderHeight), (double)(k + 1), dMinU, dMinV);
-	        
-	        dMinU = (double)texture2.getMinU();
-	        dMinV = (double)texture2.getMinV();
-	        dMaxU = (double)texture2.getMaxU();
-	        dMaxV = (double)texture2.getMaxV();
-	        
-	        tessellator.addVertexWithUV((double)(i + 1), (double)((float)j + fRenderHeight), var32, dMaxU, dMinV);
-	        tessellator.addVertexWithUV((double)(i + 1), (double)(j + 0), var24, dMaxU, dMaxV);
-	        tessellator.addVertexWithUV((double)(i + 0), (double)(j + 0), var24, dMinU, dMaxV);
-	        tessellator.addVertexWithUV((double)(i + 0), (double)((float)j + fRenderHeight), var32, dMinU, dMinV);
-	        tessellator.addVertexWithUV((double)(i + 0), (double)((float)j + fRenderHeight), var30, dMaxU, dMinV);
-	        tessellator.addVertexWithUV((double)(i + 0), (double)(j + 0), var22, dMaxU, dMaxV);
-	        tessellator.addVertexWithUV((double)(i + 1), (double)(j + 0), var22, dMinU, dMaxV);
-	        tessellator.addVertexWithUV((double)(i + 1), (double)((float)j + fRenderHeight), var30, dMinU, dMinV);
-	        
-	        var18 = (double)i + 0.5D - 0.5D;
-	        var20 = (double)i + 0.5D + 0.5D;
-	        var22 = (double)k + 0.5D - 0.5D;
-	        var24 = (double)k + 0.5D + 0.5D;
-	        var26 = (double)i + 0.5D - 0.5D;
-	        var28 = (double)i + 0.5D + 0.5D;
-	        var30 = (double)k + 0.5D - 0.5D;
-	        var32 = (double)k + 0.5D + 0.5D;
-	        
-	        tessellator.addVertexWithUV(var26, (double)((float)j + fRenderHeight), (double)(k + 0), dMinU, dMinV);
-	        tessellator.addVertexWithUV(var18, (double)(j + 0), (double)(k + 0), dMinU, dMaxV);
-	        tessellator.addVertexWithUV(var18, (double)(j + 0), (double)(k + 1), dMaxU, dMaxV);
-	        tessellator.addVertexWithUV(var26, (double)((float)j + fRenderHeight), (double)(k + 1), dMaxU, dMinV);
-	        tessellator.addVertexWithUV(var28, (double)((float)j + fRenderHeight), (double)(k + 1), dMinU, dMinV);
-	        tessellator.addVertexWithUV(var20, (double)(j + 0), (double)(k + 1), dMinU, dMaxV);
-	        tessellator.addVertexWithUV(var20, (double)(j + 0), (double)(k + 0), dMaxU, dMaxV);
-	        tessellator.addVertexWithUV(var28, (double)((float)j + fRenderHeight), (double)(k + 0), dMaxU, dMinV);
-	        
-	        dMinU = (double)texture1.getMinU();
-	        dMinV = (double)texture1.getMinV();
-	        dMaxU = (double)texture1.getMaxU();
-	        dMaxV = (double)texture1.getMaxV();
-	        
-	        tessellator.addVertexWithUV((double)(i + 0), (double)((float)j + fRenderHeight), var32, dMinU, dMinV);
-	        tessellator.addVertexWithUV((double)(i + 0), (double)(j + 0), var24, dMinU, dMaxV);
-	        tessellator.addVertexWithUV((double)(i + 1), (double)(j + 0), var24, dMaxU, dMaxV);
-	        tessellator.addVertexWithUV((double)(i + 1), (double)((float)j + fRenderHeight), var32, dMaxU, dMinV);
-	        tessellator.addVertexWithUV((double)(i + 1), (double)((float)j + fRenderHeight), var30, dMinU, dMinV);
-	        tessellator.addVertexWithUV((double)(i + 1), (double)(j + 0), var22, dMinU, dMaxV);
-	        tessellator.addVertexWithUV((double)(i + 0), (double)(j + 0), var22, dMaxU, dMaxV);
-	        tessellator.addVertexWithUV((double)(i + 0), (double)((float)j + fRenderHeight), var30, dMaxU, dMinV);
-	        
-	        j = j + 1;
+        if ( ( ( i + k ) & 1 ) != 0 )
+        {
+	        texture1 = func_94438_c( 1 );
+	        texture2 = func_94438_c( 0 );
         }
+        
+        Icon currentTexture = texture1;
+
+        tessellator.setColorOpaque_F(1.0F, 1.0F, 1.0F);
+        
+        tessellator.setBrightness( getMixedBrightnessForBlock(blockAccess, i, j, k ) );
+        
+        double dMinU = (double)currentTexture.getMinU();
+        double dMinV = (double)currentTexture.getMinV();
+        double dMaxU = (double)currentTexture.getMaxU();
+        double dMaxV = (double)currentTexture.getMaxV();
+        
+        float fRenderHeight = 1.0F;
+    
+        double var18 = (double)i + 0.5D + 0.2D;
+        double var20 = (double)i + 0.5D - 0.2D;
+        double var22 = (double)k + 0.5D + 0.2D;
+        double var24 = (double)k + 0.5D - 0.2D;
+        double var26 = (double)i + 0.5D - 0.3D;
+        double var28 = (double)i + 0.5D + 0.3D;
+        double var30 = (double)k + 0.5D - 0.3D;
+        double var32 = (double)k + 0.5D + 0.3D;
+        
+        tessellator.addVertexWithUV(var26, (double)((float)j + fRenderHeight), (double)(k + 1), dMaxU, dMinV);
+        tessellator.addVertexWithUV(var18, (double)(j + 0), (double)(k + 1), dMaxU, dMaxV);
+        tessellator.addVertexWithUV(var18, (double)(j + 0), (double)(k + 0), dMinU, dMaxV);
+        tessellator.addVertexWithUV(var26, (double)((float)j + fRenderHeight), (double)(k + 0), dMinU, dMinV);
+        tessellator.addVertexWithUV(var28, (double)((float)j + fRenderHeight), (double)(k + 0), dMaxU, dMinV);
+        tessellator.addVertexWithUV(var20, (double)(j + 0), (double)(k + 0), dMaxU, dMaxV);
+        tessellator.addVertexWithUV(var20, (double)(j + 0), (double)(k + 1), dMinU, dMaxV);
+        tessellator.addVertexWithUV(var28, (double)((float)j + fRenderHeight), (double)(k + 1), dMinU, dMinV);
+        
+        dMinU = (double)texture2.getMinU();
+        dMinV = (double)texture2.getMinV();
+        dMaxU = (double)texture2.getMaxU();
+        dMaxV = (double)texture2.getMaxV();
+        
+        tessellator.addVertexWithUV((double)(i + 1), (double)((float)j + fRenderHeight), var32, dMaxU, dMinV);
+        tessellator.addVertexWithUV((double)(i + 1), (double)(j + 0), var24, dMaxU, dMaxV);
+        tessellator.addVertexWithUV((double)(i + 0), (double)(j + 0), var24, dMinU, dMaxV);
+        tessellator.addVertexWithUV((double)(i + 0), (double)((float)j + fRenderHeight), var32, dMinU, dMinV);
+        tessellator.addVertexWithUV((double)(i + 0), (double)((float)j + fRenderHeight), var30, dMaxU, dMinV);
+        tessellator.addVertexWithUV((double)(i + 0), (double)(j + 0), var22, dMaxU, dMaxV);
+        tessellator.addVertexWithUV((double)(i + 1), (double)(j + 0), var22, dMinU, dMaxV);
+        tessellator.addVertexWithUV((double)(i + 1), (double)((float)j + fRenderHeight), var30, dMinU, dMinV);
+        
+        var18 = (double)i + 0.5D - 0.5D;
+        var20 = (double)i + 0.5D + 0.5D;
+        var22 = (double)k + 0.5D - 0.5D;
+        var24 = (double)k + 0.5D + 0.5D;
+        var26 = (double)i + 0.5D - 0.5D;
+        var28 = (double)i + 0.5D + 0.5D;
+        var30 = (double)k + 0.5D - 0.5D;
+        var32 = (double)k + 0.5D + 0.5D;
+        
+        tessellator.addVertexWithUV(var26, (double)((float)j + fRenderHeight), (double)(k + 0), dMinU, dMinV);
+        tessellator.addVertexWithUV(var18, (double)(j + 0), (double)(k + 0), dMinU, dMaxV);
+        tessellator.addVertexWithUV(var18, (double)(j + 0), (double)(k + 1), dMaxU, dMaxV);
+        tessellator.addVertexWithUV(var26, (double)((float)j + fRenderHeight), (double)(k + 1), dMaxU, dMinV);
+        tessellator.addVertexWithUV(var28, (double)((float)j + fRenderHeight), (double)(k + 1), dMinU, dMinV);
+        tessellator.addVertexWithUV(var20, (double)(j + 0), (double)(k + 1), dMinU, dMaxV);
+        tessellator.addVertexWithUV(var20, (double)(j + 0), (double)(k + 0), dMaxU, dMaxV);
+        tessellator.addVertexWithUV(var28, (double)((float)j + fRenderHeight), (double)(k + 0), dMaxU, dMinV);
+        
+        dMinU = (double)texture1.getMinU();
+        dMinV = (double)texture1.getMinV();
+        dMaxU = (double)texture1.getMaxU();
+        dMaxV = (double)texture1.getMaxV();
+        
+        tessellator.addVertexWithUV((double)(i + 0), (double)((float)j + fRenderHeight), var32, dMinU, dMinV);
+        tessellator.addVertexWithUV((double)(i + 0), (double)(j + 0), var24, dMinU, dMaxV);
+        tessellator.addVertexWithUV((double)(i + 1), (double)(j + 0), var24, dMaxU, dMaxV);
+        tessellator.addVertexWithUV((double)(i + 1), (double)((float)j + fRenderHeight), var32, dMaxU, dMinV);
+        tessellator.addVertexWithUV((double)(i + 1), (double)((float)j + fRenderHeight), var30, dMinU, dMinV);
+        tessellator.addVertexWithUV((double)(i + 1), (double)(j + 0), var22, dMinU, dMaxV);
+        tessellator.addVertexWithUV((double)(i + 0), (double)(j + 0), var22, dMaxU, dMaxV);
+        tessellator.addVertexWithUV((double)(i + 0), (double)((float)j + fRenderHeight), var30, dMaxU, dMinV);
+        
+        j = j + 1;
 
     	return true;
     }
