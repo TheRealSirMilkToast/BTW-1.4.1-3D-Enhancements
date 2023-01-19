@@ -1,6 +1,11 @@
 package net.minecraft.src;
 
+import java.util.Map;
+
 public class TDEAddon extends FCAddOn {
+
+	public static Boolean EnableCraftingBenchRecipe = false;
+	public static Boolean UseCustomStokedFireTextures = false;
 
 	public static TDEAddon instance = new TDEAddon();
 
@@ -14,16 +19,25 @@ public class TDEAddon extends FCAddOn {
 	}
 
 	@Override
+	public void PreInitialize()
+	{
+		registerDefaultConfigValues();
+	}
+
+	@Override
 	public void Initialize()
 	{
 		FCAddOnHandler.LogMessage(this.getName() + " Version " + this.getVersionString() + " Initializing...");
 
 		SetupTileEntities();
 
-		FCRecipes.AddRecipe(new ItemStack(FCBetterThanWolves.fcBlockWorkbench, 1), new Object[]
+		if(EnableCraftingBenchRecipe)
 		{
-			"###", "#X#", "###", '#', Block.planks, 'X', Item.ingotIron
-		});
+			FCRecipes.AddRecipe(new ItemStack(FCBetterThanWolves.fcBlockWorkbench, 1), new Object[]
+			{
+				"###", "#X#", "###", '#', Block.planks, 'X', Item.ingotIron
+			});
+		}
 
 		FCAddOnHandler.LogMessage(this.getName() + " Initialized");
 	}
@@ -47,4 +61,17 @@ public class TDEAddon extends FCAddOn {
 		TileEntityRenderer.instance.addSpecialRendererForClass (FCTileEntityInfernalEnchanter.class, new TDETileEntityRenderer() );
 	}
 
+	public void registerDefaultConfigValues()
+	{
+		registerProperty("EnableCraftingBenchRecipe", "false", "# Whether or not to enable the crafting bench recipe of 8 planks around 1 iron ingot");
+
+		registerProperty("UseCustomStokedFireTextures", "false", "# If false the game will use the default Stoked Fire textures.\n# If true the game will instead use:\n# fireStokedBottom_0, fireStokedBottom_1, fireStokedTop_0, fireStokedTop_1");
+	}
+
+	@Override
+	public void handleConfigProperties(Map<String, String> propertyValues)
+	{
+		this.EnableCraftingBenchRecipe = Boolean.parseBoolean(propertyValues.get("EnableCraftingBenchRecipe"));
+		this.UseCustomStokedFireTextures = Boolean.parseBoolean(propertyValues.get("UseCustomStokedFireTextures"));
+	}
 }

@@ -438,10 +438,20 @@ public class FCBlockFire extends BlockFire
 	{
 		super.registerIcons( register );
 
-		m_StokedFireTopTextureArray = new Icon[] { 
-				register.registerIcon( "fireStokedTop_0"/*, new FCClientTextureFire( "fcBlockFireStokedTopStub_0", 0 ) */), 
-				register.registerIcon( "fireStokedTop_1"/*, new FCClientTextureFire( "fcBlockFireStokedTopStub_1", 1 ) */) 
-		};
+		if(TDEAddon.UseCustomStokedFireTextures)
+		{
+			m_StokedFireTopTextureArray = new Icon[] { 
+					register.registerIcon( "fireStokedTop_0"/*, new FCClientTextureFire( "fcBlockFireStokedTopStub_0", 0 ) */), 
+					register.registerIcon( "fireStokedTop_1"/*, new FCClientTextureFire( "fcBlockFireStokedTopStub_1", 1 ) */) 
+			};
+		}
+		else
+		{
+			m_StokedFireTopTextureArray = new Icon[] { 
+					register.registerIcon( "fcBlockFireStokedTopStub_0", new FCClientTextureFire( "fcBlockFireStokedTopStub_0", 0 ) ), 
+					register.registerIcon( "fcBlockFireStokedTopStub_1", new FCClientTextureFire( "fcBlockFireStokedTopStub_1", 1 ) ) 
+			};
+		}
 	}
 
 	@Override

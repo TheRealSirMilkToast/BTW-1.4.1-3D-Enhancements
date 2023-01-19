@@ -147,10 +147,20 @@ public class FCBlockFireStoked extends FCBlockFire
     @Override
     public void registerIcons( IconRegister register )
     {
-    	fireTextureArrayBottom = new Icon[] { 
-        	register.registerIcon("fireStokedBottom_0"/*, new FCClientTextureFireStoked("fireStokedBottom_0", 0)*/),
-        	register.registerIcon("fireStokedBottom_1"/*, new FCClientTextureFireStoked("fireStokedBottom_1", 1)*/),
-    	};
+        if(TDEAddon.UseCustomStokedFireTextures)
+        {
+            fireTextureArrayBottom = new Icon[] { 
+                register.registerIcon("fireStokedBottom_0"/*, new FCClientTextureFireStoked("fireStokedBottom_0", 0)*/),
+                register.registerIcon("fireStokedBottom_1"/*, new FCClientTextureFireStoked("fireStokedBottom_1", 1)*/),
+            };
+        }
+        else
+        {
+            fireTextureArrayBottom = new Icon[] { 
+                register.registerIcon( "fcBlockFireStokedStub_0", new FCClientTextureFireStoked( "fcBlockFireStokedStub_0", 0 ) ), 
+                register.registerIcon( "fcBlockFireStokedStub_1", new FCClientTextureFireStoked( "fcBlockFireStokedStub_1", 1 ) ) 
+            };
+        }
     }
     
     @Override
