@@ -210,8 +210,8 @@ public boolean renderAsNormalBlock()
 @Override
 public void registerIcons( IconRegister register )
 {
-	blockIcon = register.registerIcon( "ladder" );
-	sandstone_top = register.registerIcon("planks_oak");
+	blockIcon = register.registerIcon( "3DLadderFront" );
+	sandstone_top = register.registerIcon("3DLadderSide");
 }
 
 @Override
