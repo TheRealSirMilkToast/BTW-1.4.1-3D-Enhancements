@@ -11,7 +11,7 @@ public class TDEAddon extends FCAddOn {
 	public static TDEAddon instance = new TDEAddon();
 
 	private static final String ADDON_NAME = "3D Enhancements";
-	private static final String ADDON_VERSION = "0.6";
+	private static final String ADDON_VERSION = "1.0";
 	private static final String LANGUAGE_PREFIX = "TDE";
 
 	private TDEAddon()
@@ -64,11 +64,11 @@ public class TDEAddon extends FCAddOn {
 
 	public void registerDefaultConfigValues()
 	{
-		registerProperty("EnableCraftingBenchRecipe", "false", "# Whether or not to enable the crafting bench recipe of 8 planks around 1 iron ingot");
+		registerProperty("EnableCraftingBenchRecipe", "false", "Whether or not to enable the crafting bench recipe of 8 planks around 1 iron ingot");
 
-		registerProperty("UseCustomStokedFireTextures", "false", "# If false the game will use the default Stoked Fire textures.\n# If true the game will instead use:\n# fireStokedBottom_0, fireStokedBottom_1, fireStokedTop_0, fireStokedTop_1");
+		registerProperty("UseCustomStokedFireTextures", "false", "If false the game will use the default Stoked Fire textures.\n# If true the game will instead use:\n# fireStokedBottom_0, fireStokedBottom_1, fireStokedTop_0, fireStokedTop_1");
 
-		registerProperty("AllowSeparateCandleLitTextures", "false", "# If false the game will use the same texture for unlit and lit candles.\n# If true the game will instead use separate textures for unlit and lit candles. The lit textures have the same name as the regular textures except with '_lit' at the end.");
+		registerProperty("AllowSeparateCandleLitTextures", "false", "If false the game will use the same texture for unlit and lit candles.\n# If true the game will instead use separate textures for unlit and lit candles. The lit textures have the same name as the regular textures except with '_lit' at the end.");
 	}
 
 	@Override
