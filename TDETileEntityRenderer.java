@@ -164,9 +164,18 @@ public class TDETileEntityRenderer extends TileEntitySpecialRenderer
 	                secondFlameYPos = secondFlameYPos + bounceAmmount;
                 }
             }
-            
+
+            //Bind the unlit texture
+            this.bindTextureByName("/textures/blocks/fcBlockCandle_infernal.png");
+
             if(par1TileEntityEnchantmentTable.isLit[numCandles])
             {
+                //Bind the lit texture
+                if(par1TileEntityEnchantmentTable.litTexture[numCandles] == true)
+                {
+                    this.bindTextureByName("/textures/blocks/fcBlockCandle_infernal_lit.png");
+                }
+
 	            //Spawn second dose of flame particles if possible
 	    		par1TileEntityEnchantmentTable.DisplayCandleFlameAtLoc
 	            (
@@ -181,7 +190,6 @@ public class TDETileEntityRenderer extends TileEntitySpecialRenderer
 	            );
             }
 
-            this.bindTextureByName("/ModelInfernalEnchanterCandles.png");
             GL11.glEnable(GL11.GL_CULL_FACE);
             this.modelCandles.render((Entity)null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
             GL11.glPopMatrix();

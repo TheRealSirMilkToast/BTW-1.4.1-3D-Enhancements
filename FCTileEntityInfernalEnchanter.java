@@ -37,6 +37,7 @@ public class FCTileEntityInfernalEnchanter extends TileEntity
     public float[] CandleRandomHoverSpeedMulti = {0.0F, 0.0F, 0.0F, 0.0F, 0.0F};
     public int m_iTimeSinceLastCandleFlame[];
     public boolean[] isLit = {false, false, false, false, false};
+    public boolean[] litTexture = {false, false, false, false, false};
     public boolean allLit = false;
     public int[] waitBeforeGoDown = {0, 0, 0, 0, 0};
 
@@ -217,6 +218,7 @@ public class FCTileEntityInfernalEnchanter extends TileEntity
                     CandleRandomCurrentHeight[i] = (float) (CandleRandomCurrentHeight[i] - (-0.3F*(Math.pow((CandleRandomCurrentHeight[i] - 0.6F), 2.0F)) + 0.13F) * CandleRandomSpeedMulti[i] * 0.5F - 0.01F);
                     
                     isLit[i] = false;
+                    litTexture[i] = false;
                     allLit = false;
                     CandleTickCounts[i] = 0;
                 }
@@ -290,6 +292,12 @@ public class FCTileEntityInfernalEnchanter extends TileEntity
 		if (m_iTimeSinceLastCandleFlame[candleIndex] == -1)
 		{
 			m_iTimeSinceLastCandleFlame[candleIndex] = 0;
+
+            //Only switch to lit texture if this is the first time a "second type" of flame particle is spawned
+            if(velY == 1.0)
+            {
+                litTexture[candleIndex] = true;
+            }
 			
 			worldObj.spawnParticle( "smoke", xCoord, yCoord, zCoord, 0F, 0F, 0F);
 			worldObj.spawnParticle( "TDEInfernalEnchanterFlame", xCoord, yCoord, zCoord, velX, velY, velZ);

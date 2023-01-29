@@ -6,6 +6,7 @@ public class TDEAddon extends FCAddOn {
 
 	public static Boolean EnableCraftingBenchRecipe = false;
 	public static Boolean UseCustomStokedFireTextures = false;
+	public static Boolean AllowSeparateCandleLitTextures = false;
 
 	public static TDEAddon instance = new TDEAddon();
 
@@ -66,6 +67,8 @@ public class TDEAddon extends FCAddOn {
 		registerProperty("EnableCraftingBenchRecipe", "false", "# Whether or not to enable the crafting bench recipe of 8 planks around 1 iron ingot");
 
 		registerProperty("UseCustomStokedFireTextures", "false", "# If false the game will use the default Stoked Fire textures.\n# If true the game will instead use:\n# fireStokedBottom_0, fireStokedBottom_1, fireStokedTop_0, fireStokedTop_1");
+
+		registerProperty("AllowSeparateCandleLitTextures", "false", "# If false the game will use the same texture for unlit and lit candles.\n# If true the game will instead use separate textures for unlit and lit candles. The lit textures have the same name as the regular textures except with '_lit' at the end.");
 	}
 
 	@Override
@@ -73,5 +76,6 @@ public class TDEAddon extends FCAddOn {
 	{
 		this.EnableCraftingBenchRecipe = Boolean.parseBoolean(propertyValues.get("EnableCraftingBenchRecipe"));
 		this.UseCustomStokedFireTextures = Boolean.parseBoolean(propertyValues.get("UseCustomStokedFireTextures"));
+		this.AllowSeparateCandleLitTextures = Boolean.parseBoolean(propertyValues.get("AllowSeparateCandleLitTextures"));
 	}
 }
