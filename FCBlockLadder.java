@@ -173,10 +173,10 @@ public class FCBlockLadder extends FCBlockLadderBase
 @Override
 public boolean DoesItemRenderAsBlock( int iItemDamage )
 {
-    return true;
+    return false;
 }
 
-@Override
+/*@Override
 public void RenderBlockAsItem(RenderBlocks renderBlocks, int iItemDamage, float fBrightness) {
 	renderBlocks.setRenderBounds(0.25D, 0.0D, 0.09375D, 0.09375D, 1.0D, 0.03125D);
 	FCClientUtilsRender.RenderInvBlockWithMetadata( renderBlocks, this, -0.8F, -0.75F, -0.5F, iItemDamage << 1 );
@@ -199,7 +199,7 @@ public void RenderBlockAsItem(RenderBlocks renderBlocks, int iItemDamage, float 
 	//renderBlocks.setRenderBounds(0D, 0D, 0D, .5D, BEDROLL_HEIGHT, .5D);
 	//FCClientUtilsRender.RenderInvBlockWithTexture( renderBlocks, this, -0.5F, -0.5F, -0.5F, sideTexture );
 	//FCClientUtilsRender.RenderInvBlockWithMetadata( renderBlocks, this, -0.5F, -0.5F, -0.5F, iItemDamage << 1 );
-}
+}*/
 
 @Override
 public boolean renderAsNormalBlock()
@@ -245,7 +245,7 @@ public Icon getIcon(int par1, int par2)
 			}
 			case(5):
 			{
-				return sandstone_top;
+				return blockIcon;
 			}
 		};
 	}
@@ -266,7 +266,7 @@ public Icon getIcon(int par1, int par2)
 		}
 		case(3):
 		{
-			return sandstone_top;
+			return blockIcon;
 		}
 		case(4):
 		{
@@ -280,6 +280,11 @@ public Icon getIcon(int par1, int par2)
 	return blockIcon;
 }
 
+@Override
+public String getItemIconName()
+{
+    return "3DLadderFront";
+}
     
     //------------- Class Specific Methods ------------//
     
