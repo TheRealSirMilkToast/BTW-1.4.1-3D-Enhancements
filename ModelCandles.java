@@ -1,4 +1,4 @@
-// Made with Blockbench 4.6.0
+// Made with Blockbench 4.6.5
 // Exported for Minecraft version 1.5.2
 // Paste this class into your mod and call render() in your Entity Render class
 // Note: You may need to adjust the y values of the 'setRotationPoint's
@@ -7,6 +7,7 @@ package net.minecraft.src;
 
 public class ModelCandles extends ModelBase {
 	private final ModelRenderer bb_main;
+	private final ModelRenderer cube_r1;
 
 	public ModelCandles() {
 		textureWidth = 16;
@@ -14,7 +15,13 @@ public class ModelCandles extends ModelBase {
 
 		bb_main = new ModelRenderer(this);
 		bb_main.setRotationPoint(0.0F, 24.0F, 0.0F);
-		this.bb_main.setTextureOffset(0, 0).addBox(-1.0F, -36.0F, -13.5F, 2, 6, 2, 0.0F);
+		
+
+		cube_r1 = new ModelRenderer(this);
+		cube_r1.setRotationPoint(0.0F, -33.0F, -12.5F);
+		bb_main.addChild(cube_r1);
+		setRotation(cube_r1, 3.1416F, 0.0F, 0.0F);
+		this.cube_r1.setTextureOffset(0, 0).addBox(-1.0F, -3.0F, -1.0F, 2, 6, 2, 0.0F);
 	}
 
 	/**
