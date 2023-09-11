@@ -11,7 +11,7 @@ public class TDEAddon extends FCAddOn {
 	public static TDEAddon instance = new TDEAddon();
 
 	private static final String ADDON_NAME = "3D Enhancements";
-	private static final String ADDON_VERSION = "1.1";
+	private static final String ADDON_VERSION = "1.2";
 	private static final String LANGUAGE_PREFIX = "TDE";
 
 	private TDEAddon()
