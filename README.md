@@ -22,6 +22,7 @@ This addon aims to spice up the visuals of the game through the following change
    - Stoked Fire (there is a config option to enable this)
      - Custom stoked fire textures have not been provided, but the option has been tested with custom animated textures
   - Unfired pottery in the kiln now use the same cooking overlay as the unfired bricks use when trying in the sun. Food in the kiln no longer has an overlay.
+4. Allows for more customizability of the Soulforge texture by making it render as a tile entity with a new cutom texture
 
 All of the models in this addon were designed for use with a 32x32 texture pack, which is why only 32x textures are included. Textures that have been provided are a combination of John Smith Textures as well as some custom texturing work.
 
