@@ -60,6 +60,8 @@ public class TDEAddon extends FCAddOn {
 		TileEntityRenderer.instance.addSpecialRendererForClass (TileEntityReedRoots.class, new TDETileEntityRenderer() );
 
 		TileEntityRenderer.instance.addSpecialRendererForClass (FCTileEntityInfernalEnchanter.class, new TDETileEntityRenderer() );
+
+		TileEntityRenderer.instance.addSpecialRendererForClass (FCTileEntityAnvil.class, new TDETileEntityRenderer() );
 	}
 
 	public void registerDefaultConfigValues()

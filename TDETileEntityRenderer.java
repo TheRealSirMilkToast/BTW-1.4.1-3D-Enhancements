@@ -10,6 +10,7 @@ public class TDETileEntityRenderer extends TileEntitySpecialRenderer
     private ModelReedRoots modelReedRoots = new ModelReedRoots();
     private ModelBook enchantmentBook = new ModelBook();
     private ModelCandles modelCandles = new ModelCandles();
+    private ModelSoulforge modelSoulforge = new ModelSoulforge();
     
 
     public void renderTileEntityAt(TileEntity TE, double par2, double par4, double par6, float par8)
@@ -42,6 +43,31 @@ public class TDETileEntityRenderer extends TileEntitySpecialRenderer
         GL11.glTranslatef((float)par2, (float)par4, (float)par6);
         GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
         GL11.glEnable(GL11.GL_CULL_FACE);
+        
+        if(TE instanceof FCTileEntityAnvil)
+        {
+            this.bindTextureByName("/textures/blocks/ModelSoulforge.png");
+            model = this.modelSoulforge;
+            
+            switch(TE.getBlockMetadata())
+            {
+            case 2:
+            	GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
+            	GL11.glTranslatef(1, 0, -1);
+            	break;
+            case 3:
+            	break;
+            case 4:
+            	GL11.glRotatef(90F, 0.0F, 1.0F, 0.0F);
+            	GL11.glTranslatef(0, 0, -1);
+            	break;
+            case 5:
+            	GL11.glRotatef(270F, 0.0F, 1.0F, 0.0F);
+            	GL11.glTranslatef(1, 0, 0);
+            	break;
+            }
+        }
+        
         model.render((Entity)null, 0F, 0F, 0F, 0F, 0.0F, 0.0625F);
         GL11.glPopMatrix();
     }
